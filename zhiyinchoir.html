@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>知音合唱團 · Calgary Zhi Yin Choir</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A1628;--ink2:#12243A;
+  --gold:#C9963A;--gold-lt:#E8BC6A;--gold-dk:#9B6E20;
+  --cream:#FAFAF7;--parchment:#F4F0E8;
+  --crimson:#8B2635;--muted:#7A8494;--border:#DDD8CE;
+  --charcoal:#2C3E50;
+  --nav-h:68px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);line-height:1.7;overflow-x:hidden}
+
+.cursor-glow{pointer-events:none;position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(201,150,58,0.06) 0%,transparent 70%);transform:translate(-50%,-50%);z-index:0;top:0;left:0}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;transition:background 0.4s,box-shadow 0.4s}
+nav.scrolled{background:rgba(10,22,40,0.97);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(201,150,58,0.2)}
+nav.top{background:transparent}
+.nav-brand{display:flex;align-items:center;gap:14px;text-decoration:none;cursor:pointer}
+.nav-logo{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif SC',serif;font-size:0.85rem;color:var(--gold);font-weight:700;transition:transform 0.3s}
+.nav-brand:hover .nav-logo{transform:rotate(15deg)}
+.nav-brand-text .zh{font-family:'Noto Serif SC',serif;font-size:1.05rem;color:#fff;font-weight:600;letter-spacing:0.06em;display:block;line-height:1.2}
+.nav-brand-text .en{font-size:0.62rem;color:rgba(255,255,255,0.4);letter-spacing:0.16em;text-transform:uppercase}
+.nav-links{display:flex;gap:0;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;padding:8px 16px;border-radius:4px;transition:color 0.2s,background 0.2s;position:relative;cursor:pointer}
+.nav-links a::after{content:'';position:absolute;bottom:4px;left:16px;right:16px;height:1px;background:var(--gold);transform:scaleX(0);transition:transform 0.25s;transform-origin:left}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a.active{color:var(--gold-lt)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:transparent}
+.hamburger span{display:block;width:22px;height:1.5px;background:#fff;transition:all 0.3s;border-radius:2px}
+.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(10,22,40,0.98);backdrop-filter:blur(20px);padding:1.5rem 5vw 2rem;transform:translateY(-110%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);z-index:999;border-bottom:1px solid rgba(201,150,58,0.2)}
+.mobile-menu.open{transform:translateY(0)}
+.mobile-menu a{display:block;color:rgba(255,255,255,0.8);text-decoration:none;font-size:1.1rem;padding:0.9rem 0;border-bottom:1px solid rgba(255,255,255,0.07);letter-spacing:0.06em;transition:color 0.2s,padding 0.2s;cursor:pointer}
+.mobile-menu a:hover{color:var(--gold-lt);padding-left:8px}
+
+.page{display:none;padding-top:var(--nav-h)}
+.page.active{display:block}
+
+.hero{position:relative;min-height:100vh;background:var(--ink);display:flex;align-items:center;overflow:hidden}
+.hero-canvas{position:absolute;inset:0;z-index:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,0.92) 0%,rgba(10,22,40,0.55) 100%);z-index:1}
+.hero-content{position:relative;z-index:2;padding:0 10vw;max-width:1100px;width:100%}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:0.7rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:0;transform:translateY(20px);transition:opacity 0.8s 0.2s,transform 0.8s 0.2s}
+.hero-eyebrow.show{opacity:1;transform:none}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;height:1px;background:var(--gold);width:28px}
+.hero-h1{font-family:'Noto Serif SC',serif;font-size:clamp(3.5rem,8vw,7rem);font-weight:900;color:#fff;line-height:1.05;letter-spacing:-0.01em;opacity:0;transform:translateY(30px);transition:opacity 0.9s 0.4s,transform 0.9s 0.4s}
+.hero-h1.show{opacity:1;transform:none}
+.hero-h1 .gold{color:var(--gold)}
+.hero-h1 .thin{font-weight:300;color:rgba(255,255,255,0.5);font-size:0.55em;display:block;letter-spacing:0.12em;margin-top:0.3em;font-family:'Inter',sans-serif}
+.hero-desc{font-size:clamp(0.95rem,1.5vw,1.1rem);color:rgba(255,255,255,0.55);max-width:500px;margin-top:1.8rem;line-height:1.8;opacity:0;transform:translateY(20px);transition:opacity 0.8s 0.7s,transform 0.8s 0.7s}
+.hero-desc.show{opacity:1;transform:none}
+.hero-btns{display:flex;gap:1rem;margin-top:2.5rem;flex-wrap:wrap;opacity:0;transform:translateY(20px);transition:opacity 0.8s 0.9s,transform 0.8s 0.9s}
+.hero-btns.show{opacity:1;transform:none}
+.btn-primary{background:var(--gold);color:var(--ink);padding:0.85rem 2.2rem;border-radius:3px;font-size:0.82rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;transition:background 0.25s,transform 0.2s,box-shadow 0.25s;position:relative;overflow:hidden;display:inline-block}
+.btn-primary::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.15);transform:translateX(-100%);transition:transform 0.35s}
+.btn-primary:hover::before{transform:translateX(0)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,150,58,0.35)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.8);padding:0.85rem 2.2rem;border-radius:3px;font-size:0.82rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border:1px solid rgba(255,255,255,0.25);transition:all 0.25s;display:inline-block}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.3);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0;transition:opacity 0.8s 1.4s;cursor:pointer;z-index:2}
+.hero-scroll.show{opacity:1}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(201,150,58,0.6),transparent);animation:scroll-pulse 2s ease-in-out infinite}
+@keyframes scroll-pulse{0%,100%{opacity:0.3;transform:scaleY(0.8)}50%{opacity:1;transform:scaleY(1)}}
+
+.stats-bar{background:var(--gold);padding:2.2rem 10vw;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem}
+.stat-item{text-align:center}
+.stat-num{font-family:'Noto Serif SC',serif;font-size:2.2rem;font-weight:900;color:var(--ink);line-height:1}
+.stat-lbl{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(10,22,40,0.6);margin-top:4px}
+
+.section{padding:7rem 10vw}
+.section-eyebrow{font-size:0.68rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.section-title{font-family:'Noto Serif SC',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:1.5rem}
+.section-title em{font-style:normal;color:var(--gold)}
+
+.about{background:var(--ink2)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:center}
+.about .section-title{color:#fff}
+.about p{color:rgba(255,255,255,0.6);font-size:0.95rem;line-height:1.9}
+.about p+p{margin-top:1rem}
+.about-card{background:rgba(255,255,255,0.04);border:1px solid rgba(201,150,58,0.2);border-radius:8px;padding:2.5rem;position:relative;overflow:hidden}
+.about-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.about-card .zh-quote{font-family:'Noto Serif SC',serif;font-size:1.4rem;color:rgba(201,150,58,0.8);line-height:1.8;margin-bottom:1.5rem}
+.about-card .attribution{font-size:0.78rem;color:rgba(255,255,255,0.3);letter-spacing:0.12em}
+.about-note{margin-top:1.5rem;padding:1rem 1.2rem;border-left:2px solid var(--gold);background:rgba(201,150,58,0.06);border-radius:0 4px 4px 0;font-size:0.82rem;color:rgba(255,255,255,0.45);font-style:italic}
+
+.info-section{background:var(--parchment)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:3rem}
+.info-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:2rem 1.5rem;transition:transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden}
+.info-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transition:transform 0.3s;transform-origin:left}
+.info-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.1)}
+.info-card:hover::after{transform:scaleX(1)}
+.info-card .ic{font-size:1.8rem;margin-bottom:1rem}
+.info-card .lbl{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.info-card .val{font-size:0.92rem;color:var(--ink);line-height:1.6}
+.info-card a{color:var(--crimson);text-decoration:none;transition:color 0.2s}
+.info-card a:hover{color:var(--gold-dk)}
+
+.parallax-divider{height:260px;background:var(--ink);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.parallax-text{font-family:'Noto Serif SC',serif;font-size:clamp(3rem,8vw,7rem);font-weight:900;color:rgba(255,255,255,0.04);letter-spacing:0.15em;white-space:nowrap;will-change:transform;user-select:none}
+.parallax-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;z-index:2}
+.parallax-center .tag{font-size:0.72rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(201,150,58,0.8)}
+.parallax-center .big{font-family:'Noto Serif SC',serif;font-size:clamp(1.2rem,2.5vw,2rem);color:rgba(255,255,255,0.8);font-weight:600;letter-spacing:0.08em}
+
+.map-section{background:#fff}
+.map-wrap{border-radius:8px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.08);margin-top:2.5rem;border:1px solid var(--border)}
+.map-wrap iframe{width:100%;height:400px;border:none;display:block}
+
+.social-section{background:var(--ink);padding:6rem 10vw;text-align:center}
+.social-section .section-title{color:#fff}
+.social-section .sub{color:rgba(255,255,255,0.4);margin-bottom:3rem;font-size:0.92rem}
+.social-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.soc-btn{display:flex;align-items:center;gap:10px;padding:1rem 2rem;border-radius:4px;font-size:0.85rem;font-weight:600;letter-spacing:0.06em;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s}
+.soc-btn:hover{transform:translateY(-3px)}
+.soc-yt{background:#FF0000;color:#fff;box-shadow:0 4px 16px rgba(255,0,0,0.25)}
+.soc-yt:hover{box-shadow:0 8px 24px rgba(255,0,0,0.4)}
+.soc-xhs{background:#FF2442;color:#fff;box-shadow:0 4px 16px rgba(255,36,66,0.25)}
+.soc-xhs:hover{box-shadow:0 8px 24px rgba(255,36,66,0.4)}
+
+.page-header{background:var(--ink);padding:5rem 10vw 4rem;position:relative;overflow:hidden}
+.page-header::before{content:'';position:absolute;bottom:-1px;left:0;right:0;height:60px;background:var(--cream);clip-path:ellipse(55% 100% at 50% 100%)}
+.page-header h1{font-family:'Noto Serif SC',serif;font-size:clamp(2rem,5vw,3.5rem);color:#fff;font-weight:700}
+.page-header h1 span{color:var(--gold)}
+.page-header p{color:rgba(255,255,255,0.4);margin-top:0.6rem;font-size:0.9rem}
+
+.photos-body{padding:4rem 10vw}
+.year-group{margin-bottom:4rem}
+.year-label{display:flex;align-items:center;gap:1rem;font-family:'Noto Serif SC',serif;font-size:1.8rem;color:var(--ink);margin-bottom:1.5rem}
+.year-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.year-label .yr-num{color:var(--gold)}
+.album-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.9rem}
+.album-card{display:block;text-decoration:none;background:#fff;border:1px solid var(--border);border-radius:6px;padding:1.1rem 1.3rem;transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;position:relative;overflow:hidden}
+.album-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transition:transform 0.25s;transform-origin:bottom}
+.album-card:hover{transform:translateX(4px);box-shadow:0 4px 20px rgba(0,0,0,0.08);border-color:transparent}
+.album-card:hover::before{transform:scaleY(1)}
+.album-card .date{font-size:0.7rem;color:var(--muted);letter-spacing:0.06em;margin-bottom:4px}
+.album-card .title{font-size:0.88rem;font-weight:500;color:var(--ink)}
+.album-card .arrow{position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--gold);opacity:0;transition:opacity 0.2s,right 0.2s;font-size:1rem}
+.album-card:hover .arrow{opacity:1;right:0.8rem}
+
+.contact-body{padding:4rem 10vw;display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:start}
+.contact-block h3{font-family:'Noto Serif SC',serif;font-size:1.3rem;margin-bottom:1.8rem;padding-bottom:0.8rem;border-bottom:2px solid var(--gold)}
+.c-row{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start;font-size:0.9rem;color:var(--charcoal)}
+.c-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.c-row strong{display:block;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.c-row a{color:var(--crimson);text-decoration:none}
+.c-row a:hover{text-decoration:underline}
+.join-card{background:var(--parchment);border-radius:8px;padding:2rem;border:1px solid var(--border)}
+.join-card p{font-size:0.9rem;color:var(--charcoal);line-height:1.8}
+.join-card p+p{margin-top:0.8rem}
+.join-card a{color:var(--crimson)}
+
+.login-wrap{min-height:65vh;display:flex;align-items:center;justify-content:center;padding:4rem 5vw;background:var(--parchment)}
+.login-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:3rem 2.5rem;max-width:400px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.07)}
+.login-card .lc-icon{text-align:center;font-size:2.8rem;margin-bottom:0.5rem}
+.login-card h2{font-family:'Noto Serif SC',serif;font-size:1.4rem;text-align:center;margin-bottom:0.3rem}
+.login-card .lc-sub{font-size:0.8rem;color:var(--muted);text-align:center;margin-bottom:2rem}
+.form-field{margin-bottom:1.2rem}
+.form-field label{display:block;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.form-field input{width:100%;padding:0.75rem 1rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.92rem;color:var(--ink);background:#fff;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+.form-field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,150,58,0.12)}
+.login-error{display:none;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:0.82rem;padding:0.7rem 1rem;border-radius:6px;margin-bottom:1rem;text-align:center}
+.members-content{display:none;padding:4rem 10vw}
+.members-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2.5rem}
+.members-header h2{font-family:'Noto Serif SC',serif;font-size:1.5rem}
+.members-header p{font-size:0.85rem;color:var(--muted);margin-top:3px}
+.btn-sm-outline{background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.45rem 1rem;border-radius:4px;font-size:0.75rem;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.2s}
+.btn-sm-outline:hover{border-color:var(--crimson);color:var(--crimson)}
+.drive-shell{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
+.drive-bar{background:var(--ink);padding:0.85rem 1.3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem}
+.drive-bar span{color:var(--gold);font-size:0.82rem}
+.drive-shell iframe{width:100%;height:560px;border:none;display:block}
+.drive-hint{text-align:center;font-size:0.78rem;color:var(--muted);margin-top:1rem}
+
+footer{background:var(--ink);border-top:1px solid rgba(201,150,58,0.15);padding:3rem 10vw;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem}
+.footer-brand .zh{font-family:'Noto Serif SC',serif;color:var(--gold);font-size:1rem}
+.footer-brand .en{font-size:0.65rem;color:rgba(255,255,255,0.3);letter-spacing:0.14em;text-transform:uppercase;margin-top:2px}
+footer p{color:rgba(255,255,255,0.25);font-size:0.75rem}
+footer a{color:rgba(255,255,255,0.25)}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal-right.visible{opacity:1;transform:none}
+.stagger>*{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease}
+.stagger.visible>*:nth-child(1){opacity:1;transform:none;transition-delay:0s}
+.stagger.visible>*:nth-child(2){opacity:1;transform:none;transition-delay:0.1s}
+.stagger.visible>*:nth-child(3){opacity:1;transform:none;transition-delay:0.2s}
+.stagger.visible>*:nth-child(4){opacity:1;transform:none;transition-delay:0.3s}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .about-grid,.contact-body{grid-template-columns:1fr}
+  .section,.social-section{padding:5rem 6vw}
+  .stats-bar{padding:2rem 6vw;grid-template-columns:repeat(2,1fr)}
+  .photos-body,.contact-body,.members-content{padding:3rem 6vw}
+  .page-header{padding:4rem 6vw 3rem}
+  .map-section{padding-left:6vw;padding-right:6vw}
+  footer{padding:2.5rem 6vw}
+  .login-wrap{padding:3rem 4vw}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav id="mainNav" class="top">
+  <a class="nav-brand" onclick="showPage('home')">
+    <div class="nav-logo">知</div>
+    <div class="nav-brand-text">
+      <span class="zh">知音合唱團</span>
+      <span class="en">Calgary Zhi Yin Choir</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">主頁 Home</a></li>
+    <li><a onclick="showPage('photos')" id="nav-photos">照片 Photos</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact">聯絡 Contact</a></li>
+    <li><a onclick="showPage('members')" id="nav-members">团员专区</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a onclick="showPage('home');closeMobile()">主頁 Home</a>
+  <a onclick="showPage('photos');closeMobile()">照片 Photos</a>
+  <a onclick="showPage('contact');closeMobile()">聯絡 Contact</a>
+  <a onclick="showPage('members');closeMobile()">团员专区 Members</a>
+</div>
+
+<div id="page-home" class="page active">
+  <section class="hero">
+    <canvas id="heroCanvas" class="hero-canvas"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow" id="he1">Calgary · Est. 2004 · Non-Profit</div>
+      <h1 class="hero-h1" id="he2">
+        知音<span class="gold">合唱</span>
+        <span class="thin">Calgary Zhi Yin Choir</span>
+      </h1>
+      <p class="hero-desc" id="he3">因音樂而聚，因知音而長。<br>Where friends find each other through the art of choral music.</p>
+      <div class="hero-btns" id="he4">
+        <a class="btn-primary" onclick="showPage('contact')">加入我們 Join Us</a>
+        <a class="btn-ghost" href="https://www.youtube.com/@CalgaryZhi-yinChoir" target="_blank">▶ Watch Performances</a>
+      </div>
+    </div>
+    <div class="hero-scroll" id="heroScroll" onclick="document.getElementById('statsBar').scrollIntoView({behavior:'smooth'})">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <div class="stats-bar stagger" id="statsBar">
+    <div class="stat-item">
+      <div class="stat-num" data-count="20">0</div>
+      <div class="stat-lbl">Years of Music</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="2004">0</div>
+      <div class="stat-lbl">Founded 創立</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-count="50">0</div>
+      <div class="stat-lbl">+ Performances</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">♪</div>
+      <div class="stat-lbl">Every Sunday 每週日</div>
+    </div>
+  </div>
+
+  <section class="about section">
+    <div class="about-grid">
+      <div class="reveal-left">
+        <p class="section-eyebrow">About Us · 關於我們</p>
+        <h2 class="section-title" style="color:#fff">用歌聲連結<em>心靈</em></h2>
+        <p>卡爾加裏知音合唱團是由愛好音樂、喜愛合唱藝術、願為社會公益奉獻時間精力的華人組成的非營利性音樂團體，於二零零四年九月由指揮楊雪佳女士創立。</p>
+        <p>其宗旨是通過合唱的形式弘揚中華文化藝術，加強中加文化交流，活躍社區生活，通過合唱藝術提高音樂修養。</p>
+        <div class="about-note">我們感謝 Alberta Foundation for the Arts 自2009年起提供的運營資助。</div>
+      </div>
+      <div class="reveal-right">
+        <div class="about-card">
+          <p class="zh-quote">「知音」— 籍合唱而知音樂，因音樂而成知己。</p>
+          <p style="color:rgba(255,255,255,0.55);font-size:0.9rem;line-height:1.8">The Calgary Zhi-Yin Choir was founded in September 2004 by conductor Shana Yang. Translated, <em style="color:var(--gold-lt)">"Zhi-Yin"</em> means friends in music — through our shared singing, we grow to understand both music and one another.</p>
+          <p class="attribution" style="margin-top:1.5rem">Government-registered non-profit · Calgary, Alberta</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO GALLERY STRIP -->
+  <section style="background:var(--cream);padding:6rem 10vw">
+    <p class="section-eyebrow reveal">Our Moments · 精彩瞬間</p>
+    <h2 class="section-title reveal">留住每一個音符</h2>
+    <p class="reveal" style="color:var(--muted);font-size:0.92rem;margin-bottom:2.5rem;max-width:520px">From our 20th Anniversary Concert to mid-autumn performances at the National Music Centre — some of our favourite moments.</p>
+
+    <div class="reveal" style="margin-bottom:1rem">
+      <div style="border-radius:10px;overflow:hidden;position:relative;cursor:pointer;box-shadow:0 8px 40px rgba(0,0,0,0.12)" onclick="window.open('https://photos.google.com/share/AF1QipOVA-ZUZAjIL0YomHHa8EYVhX3uZWWxHpv4FLl3JenOsVdN7qn0z9ei_i1X4B-Tow?key=RVBkbkdfN2w1NEJUOW5WQ0pVd25EZ2hqRUJnVWZR','_blank')">
+        <img src="https://www.todocanada.ca/wp-content/uploads/NMC_2025_MAY-3_Zhiyin-Choir_wide.jpg"
+          alt="知音合唱團 at Studio Bell, National Music Centre"
+          style="width:100%;height:420px;object-fit:cover;object-position:center 30%;display:block;transition:transform 0.6s ease"
+          onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(10,22,40,0.75) 0%,transparent 50%)"></div>
+        <div style="position:absolute;bottom:1.5rem;left:1.8rem;right:1.8rem">
+          <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:6px">Studio Bell · National Music Centre · 2025</div>
+          <div style="font-family:'Noto Serif SC',serif;font-size:1.3rem;color:#fff;font-weight:600">Asian Heritage Month Performance · 亞裔傳統月演出</div>
+        </div>
+        <div style="position:absolute;top:1.2rem;right:1.2rem;background:rgba(201,150,58,0.9);color:var(--ink);font-size:0.7rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:6px 12px;border-radius:2px">View Album →</div>
+      </div>
+    </div>
+
+    <div class="stagger" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem">
+      <a href="https://photos.app.goo.gl/YQAF3MMvMCprmpHQ8" target="_blank" style="display:block;background:var(--ink);border-radius:8px;overflow:hidden;text-decoration:none;position:relative;aspect-ratio:4/3;transition:transform 0.25s,box-shadow 0.25s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a3a5c,#0a1628)"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem">
+          <div style="font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Sep 2024</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#fff;line-height:1.4">中秋演出<br><span style="font-size:0.75rem;font-weight:400;opacity:0.65">National Music Center</span></div>
+        </div>
+        <div style="position:absolute;top:0.8rem;right:0.8rem;color:var(--gold);font-size:0.9rem">↗</div>
+      </a>
+      <a href="https://photos.app.goo.gl/CmJumtMdMxf7SDDx5" target="_blank" style="display:block;background:var(--ink);border-radius:8px;overflow:hidden;text-decoration:none;position:relative;aspect-ratio:4/3;transition:transform 0.25s,box-shadow 0.25s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,#3a1a1a,#1a0a0a)"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem">
+          <div style="font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Jun 2024</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#fff;line-height:1.4">20周年頒獎<br><span style="font-size:0.75rem;font-weight:400;opacity:0.65">20th Anniversary Awards</span></div>
+        </div>
+        <div style="position:absolute;top:0.8rem;right:0.8rem;color:var(--gold);font-size:0.9rem">↗</div>
+      </a>
+      <a href="https://photos.app.goo.gl/sLeTPm5HdF1r77YA9" target="_blank" style="display:block;background:var(--ink);border-radius:8px;overflow:hidden;text-decoration:none;position:relative;aspect-ratio:4/3;transition:transform 0.25s,box-shadow 0.25s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a2a1a,#0a160a)"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem">
+          <div style="font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Dec 2023</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#fff;line-height:1.4">Sound of Season<br><span style="font-size:0.75rem;font-weight:400;opacity:0.65">聖誕音樂會</span></div>
+        </div>
+        <div style="position:absolute;top:0.8rem;right:0.8rem;color:var(--gold);font-size:0.9rem">↗</div>
+      </a>
+      <a href="https://photos.google.com/share/AF1QipOVA-ZUZAjIL0YomHHa8EYVhX3uZWWxHpv4FLl3JenOsVdN7qn0z9ei_i1X4B-Tow?key=RVBkbkdfN2w1NEJUOW5WQ0pVd25EZ2hqRUJnVWZR" target="_blank" style="display:block;background:var(--ink);border-radius:8px;overflow:hidden;text-decoration:none;position:relative;aspect-ratio:4/3;transition:transform 0.25s,box-shadow 0.25s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+        <div style="position:absolute;inset:0;background:linear-gradient(135deg,#2a1a3a,#120a1a)"></div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem">
+          <div style="font-size:0.65rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Jun 2024</div>
+          <div style="font-size:0.85rem;font-weight:600;color:#fff;line-height:1.4">20周年音樂會<br><span style="font-size:0.75rem;font-weight:400;opacity:0.65">20th Anniversary Concert</span></div>
+        </div>
+        <div style="position:absolute;top:0.8rem;right:0.8rem;color:var(--gold);font-size:0.9rem">↗</div>
+      </a>
+    </div>
+
+    <div class="reveal" style="text-align:center;margin-top:2.5rem">
+      <a onclick="showPage('photos')" class="btn-primary" style="cursor:pointer">查看全部照片 View All Photos →</a>
+    </div>
+  </section>
+
+  <section class="info-section section">
+    <p class="section-eyebrow reveal">Rehearsal Info · 排練資訊</p>
+    <h2 class="section-title reveal">歡迎加入我們</h2>
+    <div class="info-grid stagger">
+      <div class="info-card">
+        <div class="ic">📅</div>
+        <div class="lbl">Rehearsal Day 排練日</div>
+        <div class="val">星期天 Sunday<br>每週 Every week</div>
+      </div>
+      <div class="info-card">
+        <div class="ic">🕔</div>
+        <div class="lbl">Time 時間</div>
+        <div class="val">下午 5:00 – 8:00 pm</div>
+      </div>
+      <div class="info-card">
+        <div class="ic">📍</div>
+        <div class="lbl">Location 地址</div>
+        <div class="val">Transalta Pavilion<br>18 Mt Royal Cir SW<br>Calgary, AB T3E 7N5</div>
+      </div>
+      <div class="info-card">
+        <div class="ic">📞</div>
+        <div class="lbl">Contact 聯絡</div>
+        <div class="val">
+          <a href="tel:4035475198">403-547-5198</a><br>
+          <a href="mailto:info@zhiyinchoir.com">info@zhiyinchoir.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="parallax-divider">
+    <div class="parallax-text" id="parallaxText">知音合唱團 · ZHI YIN CHOIR · 知音合唱團 · ZHI YIN CHOIR · 知音合唱團 ·&nbsp;</div>
+    <div class="parallax-center">
+      <span class="tag">Calgary · Since 2004</span>
+      <div class="big">合唱，讓我們成為知音</div>
+      <span class="tag">Singing together since 2004</span>
+    </div>
+  </div>
+
+  <section class="map-section section">
+    <p class="section-eyebrow reveal">Find Us · 找到我們</p>
+    <h2 class="section-title reveal">排練地點</h2>
+    <div class="map-wrap reveal">
+      <iframe src="https://maps-api-ssl.google.com/maps?hl=en-US&ll=51.011499,-114.128415&output=embed&q=18+Mt+Royal+Cir+SW,+Calgary,+AB+T3E+7N5,+Canada&z=16" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <section class="social-section">
+    <p class="section-eyebrow reveal" style="color:var(--gold)">Follow Us · 關注我們</p>
+    <h2 class="section-title reveal">聆聽我們的音樂</h2>
+    <p class="sub reveal">Watch performances and stay connected on social media.</p>
+    <div class="social-btns reveal">
+      <a href="https://www.youtube.com/@CalgaryZhi-yinChoir" target="_blank" class="soc-btn soc-yt">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+        YouTube 頻道
+      </a>
+      <a href="https://www.xiaohongshu.com/user/profile/61ca32760000000010006e5e" target="_blank" class="soc-btn soc-xhs">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 13H11V9h2v6zm0-8H11V5h2v2z"/></svg>
+        小紅書頻道
+      </a>
+    </div>
+  </section>
+</div>
+
+<div id="page-photos" class="page">
+  <div class="page-header">
+    <h1>照片 <span>Gallery</span></h1>
+    <p>Over 20 years of performances, community events &amp; memories · 二十餘年的演出與回憶</p>
+  </div>
+  <div class="photos-body">
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2024</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/YQAF3MMvMCprmpHQ8" target="_blank"><div class="date">September 23, 2024</div><div class="title">National Music Center 中秋演出</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.google.com/share/AF1QipOVA-ZUZAjIL0YomHHa8EYVhX3uZWWxHpv4FLl3JenOsVdN7qn0z9ei_i1X4B-Tow?key=RVBkbkdfN2w1NEJUOW5WQ0pVd25EZ2hqRUJnVWZR" target="_blank"><div class="date">June 16, 2024</div><div class="title">知音20周年音樂會 · 20th Anniversary Concert</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/CmJumtMdMxf7SDDx5" target="_blank"><div class="date">June 3, 2024</div><div class="title">知音20周年頒獎 · 20th Anniversary Awards</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2023</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/sLeTPm5HdF1r77YA9" target="_blank"><div class="date">December 21, 2023</div><div class="title">Sound of Season 音樂會</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2018</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/TAW9ndUnLep4kVJo7" target="_blank"><div class="date">July 22, 2018</div><div class="title">Summer Picnic 夏日野餐</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2017</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/JR4kmYSDoPapCbJEA" target="_blank"><div class="date">March 25, 2017</div><div class="title">Recital 音樂會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/F5p9mPvnWTLTAAVu6" target="_blank"><div class="date">January 26, 2017</div><div class="title">老人院春節慰問演出</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2016</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/q6ovU1pZ9qT1frgq8" target="_blank"><div class="date">December 17, 2016</div><div class="title">Sounds of Season 聖誕音樂會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/yUuwAYXLtNCrRst76" target="_blank"><div class="date">November 26, 2016</div><div class="title">Calgary Carol Festival</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/ZXGQgYV3w5b7yo8AA" target="_blank"><div class="date">September 29, 2016</div><div class="title">國慶67周年招待會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/uvn33UpjSGJuVWZM9" target="_blank"><div class="date">September 2016</div><div class="title">Mount Royal University 開始排練</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/Tn2rznv1DmEX4FXN9" target="_blank"><div class="date">June 2016</div><div class="title">最後一次排練</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/WXyx7y1hvLDtNq7QA" target="_blank"><div class="date">June 18, 2016</div><div class="title">榮基百萬行</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/4kYV86utGKjrZAD86" target="_blank"><div class="date">May 14, 2016</div><div class="title">為Fort McMurray 賑災義演</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/Ec8djBvaTqCFLXhv5" target="_blank"><div class="date">May 14, 2016</div><div class="title">榮基中心母親節演出</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/Ee1NyWmuxbAH2LKV9" target="_blank"><div class="date">February 6, 2016</div><div class="title">春節晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/TtvC4ocPQeGmcnKx9" target="_blank"><div class="date">February 6, 2016</div><div class="title">Center for New Comers 演出</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/rt2zCcuL5oc4nrkAA" target="_blank"><div class="date">January 16, 2016</div><div class="title">知音 Recital</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2015</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/bwFfZGLcuqQGHqj68" target="_blank"><div class="date">September 27, 2015</div><div class="title">與西安音樂學院演出</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/njvUoN8wwpUqBvp58" target="_blank"><div class="date">August 23, 2015</div><div class="title">與BC中樂團演出</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/gMw7yEZuJwUxsRdi8" target="_blank"><div class="date">February 2015</div><div class="title">紐約黃河大合唱之行</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2014</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/QDNEWFHNG1FAJU3w6" target="_blank"><div class="date">November 30, 2014</div><div class="title">Calgary Carol Festival</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/1MXoURtABVakYs7j9" target="_blank"><div class="date">October 9, 2014</div><div class="title">知音十年感恩音樂會 · 10th Anniversary</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/3SNDGv5GrvYTc73R6" target="_blank"><div class="date">May 10, 2014</div><div class="title">老人院演出</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/Lxzqu7J5aMX68ofK9" target="_blank"><div class="date">March 1, 2014</div><div class="title">知音 Recital</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2013</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/JddSyNdvwR2Xcgvp6" target="_blank"><div class="date">December 24, 2013</div><div class="title">新生命教會平安夜晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/ydBdETizgD4BxkCA6" target="_blank"><div class="date">November 30, 2013</div><div class="title">Calgary Carol Festival</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/ZqQ4tjV8SMskZGqw7" target="_blank"><div class="date">September 29, 2013</div><div class="title">將愛進行到底 兒童醫院籌款音樂晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/pBm9FGuJ2qryMTWy6" target="_blank"><div class="date">February 25, 2013</div><div class="title">Marlborough Community Center</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/JjfoihW6FQsgqczq6" target="_blank"><div class="date">February 10, 2013</div><div class="title">Recital 音樂會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/bA4NbxduqcryDchbA" target="_blank"><div class="date">January 19, 2013</div><div class="title">春節晚會</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2012</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/vPM65foAv95cE8sw6" target="_blank"><div class="date">December 26, 2012</div><div class="title">FM94.7 聖誕節訪談</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/NbF5MuQ3n3donBM99" target="_blank"><div class="date">December 1, 2012</div><div class="title">卡爾加里合唱節</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/AbJobXUKfnqNpoS9A" target="_blank"><div class="date">November 18, 2012</div><div class="title">溫哥華演唱會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/ppZZnpC1eHhxXmka9" target="_blank"><div class="date">June 24, 2012</div><div class="title">將愛進行到底扶貧助學音樂晚會</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2011</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/dvVNcdS6iHm2mcwV8" target="_blank"><div class="date">June 26, 2011</div><div class="title">夏天 Picnic</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/9tXcwcXMmsToonW3A" target="_blank"><div class="date">June 5, 2011</div><div class="title">將愛進行到底扶貧助學音樂晚會</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2010</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/KDnLqSbiY3eHdRxJ6" target="_blank"><div class="date">September 14, 2010</div><div class="title">楓梅京韻經典折子戲</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/5K5iKgGJADyWh9jq6" target="_blank"><div class="date">September 13, 2010</div><div class="title">楓梅京韻中西合璧京劇演唱會</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2009</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/kJuGNFXE46yM3LEcA" target="_blank"><div class="date">December 12, 2009</div><div class="title">飛越國界音樂晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/EdTknDUsesZXVRvJ7" target="_blank"><div class="date">October 4, 2009</div><div class="title">埃得蒙頓國慶晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/V7TW5K7Pmq4FLihQ9" target="_blank"><div class="date">September 22, 2009</div><div class="title">卡爾加裏國慶晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/mtsWxMLmPmLsMDhN7" target="_blank"><div class="date">February 8, 2009</div><div class="title">新春晚會</div><span class="arrow">→</span></a>
+    </div></div>
+    <div class="year-group reveal"><div class="year-label"><span class="yr-num">2007 – 2008</span></div><div class="album-grid">
+      <a class="album-card" href="https://photos.app.goo.gl/hUFfmbuxrG8LTANq6" target="_blank"><div class="date">November 1, 2008</div><div class="title">知音專場音樂會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/KgH1Cpv5y7SqTpPj6" target="_blank"><div class="date">February 9, 2008</div><div class="title">卡城中國專家協會春節聯歡晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/quknvcmP7mNrgHV27" target="_blank"><div class="date">November 3, 2007</div><div class="title">江浙上海同鄉會聯歡晚會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/KBUNaTf83yrcWU9L8" target="_blank"><div class="date">September 24, 2007</div><div class="title">中加手拉手為奧運喝彩音樂會</div><span class="arrow">→</span></a>
+      <a class="album-card" href="https://photos.app.goo.gl/CeZDhzpetTFdY9Nr9" target="_blank"><div class="date">2007</div><div class="title">新春音樂會</div><span class="arrow">→</span></a>
+    </div></div>
+  </div>
+</div>
+
+<div id="page-contact" class="page">
+  <div class="page-header">
+    <h1>聯絡我們 <span>Contact</span></h1>
+    <p>我們很樂意聽到您的消息 · We'd love to hear from you</p>
+  </div>
+  <div class="contact-body">
+    <div class="contact-block reveal-left">
+      <h3>聯絡資訊 · Contact Info</h3>
+      <div class="c-row"><span class="c-icon">📞</span><div><strong>Phone 電話</strong><a href="tel:4035475198">403-547-5198</a></div></div>
+      <div class="c-row"><span class="c-icon">✉️</span><div><strong>Email 電郵</strong><a href="mailto:info@zhiyinchoir.com">info@zhiyinchoir.com</a></div></div>
+      <div class="c-row"><span class="c-icon">📅</span><div><strong>Rehearsal Day 排練日</strong>星期天 Sunday · 每週 Weekly</div></div>
+      <div class="c-row"><span class="c-icon">🕔</span><div><strong>Time 時間</strong>下午 5:00 – 8:00 pm</div></div>
+      <div class="c-row"><span class="c-icon">📍</span><div><strong>Address 地址</strong>Transalta Pavilion<br>18 Mt Royal Cir SW<br>Calgary, AB T3E 7N5</div></div>
+      <div style="margin-top:2rem;display:flex;gap:0.8rem;flex-wrap:wrap">
+        <a href="https://www.youtube.com/@CalgaryZhi-yinChoir" target="_blank" class="soc-btn soc-yt" style="font-size:0.78rem;padding:0.7rem 1.3rem">▶ YouTube</a>
+        <a href="https://www.xiaohongshu.com/user/profile/61ca32760000000010006e5e" target="_blank" class="soc-btn soc-xhs" style="font-size:0.78rem;padding:0.7rem 1.3rem">📕 小紅書</a>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <h3 style="font-family:'Noto Serif SC',serif;font-size:1.3rem;margin-bottom:1.8rem;padding-bottom:0.8rem;border-bottom:2px solid var(--gold)">加入我們 · Join Us</h3>
+      <div class="join-card">
+        <p>我們歡迎您成為我們中的一員，一同享受知音帶給您的快樂！</p>
+        <p>We welcome new members who love choral music — whether experienced singers or passionate beginners.</p>
+        <p style="margin-top:1rem">Email us at <a href="mailto:info@zhiyinchoir.com">info@zhiyinchoir.com</a> or call <a href="tel:4035475198">403-547-5198</a>. You're also welcome to drop by any Sunday rehearsal from 5–8 pm.</p>
+      </div>
+    </div>
+  </div>
+  <div style="padding:0 10vw 5rem">
+    <div class="map-wrap reveal">
+      <iframe src="https://maps-api-ssl.google.com/maps?hl=en-US&ll=51.011499,-114.128415&output=embed&q=18+Mt+Royal+Cir+SW,+Calgary,+AB+T3E+7N5,+Canada&z=16" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
+<div id="page-members" class="page">
+  <div class="page-header">
+    <h1>团员专区 <span>Members</span></h1>
+    <p>歌谱及录音 · Sheet Music &amp; Recordings</p>
+  </div>
+  <div class="login-wrap" id="membersLogin">
+    <div class="login-card">
+      <div class="lc-icon">🎵</div>
+      <h2>团员登录</h2>
+      <p class="lc-sub">Members Login · 請輸入帳號密碼</p>
+      <div class="form-field">
+        <label>用户名 Username</label>
+        <input id="loginUser" type="text" placeholder="请输入用户名" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="form-field">
+        <label>密码 Password</label>
+        <input id="loginPass" type="password" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="login-error" id="loginError">❌ 用户名或密码错误 · Incorrect credentials</div>
+      <button class="btn-primary" onclick="doLogin()" style="width:100%;text-align:center;margin-top:0.5rem">登录 Login →</button>
+    </div>
+  </div>
+  <div class="members-content" id="membersContent">
+    <div class="members-header">
+      <div><h2>歌谱及录音</h2><p>Sheet Music &amp; Recordings · Google Drive</p></div>
+      <button class="btn-sm-outline" onclick="doLogout()">登出 Logout</button>
+    </div>
+    <div class="drive-shell">
+      <div class="drive-bar">
+        <span>📁 知音合唱团 · 歌谱及录音</span>
+        <a href="https://drive.google.com/drive/folders/1fOABA1LV_4pa3uFC3Y79HVNNlhsBPLw1?lfhs=2" target="_blank" class="btn-primary" style="font-size:0.75rem;padding:0.5rem 1.2rem">在 Google Drive 中打开 ↗</a>
+      </div>
+      <iframe src="https://drive.google.com/embeddedfolderview?id=1fOABA1LV_4pa3uFC3Y79HVNNlhsBPLw1#list" allowfullscreen></iframe>
+    </div>
+    <p class="drive-hint">如文件无法显示，请点击上方按钮在 Google Drive 中直接打开。If files don't load, open directly in Google Drive.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">
+    <div class="zh">知音合唱團</div>
+    <div class="en">Calgary Zhi Yin Choir</div>
+  </div>
+  <p>© 2025 Calgary Zhi Yin Choir · Non-profit · Calgary, AB · <a href="mailto:info@zhiyinchoir.com">info@zhiyinchoir.com</a></p>
+</footer>
+
+<script>
+// Cursor glow
+document.addEventListener('mousemove',e=>{
+  const g=document.getElementById('cursorGlow');
+  g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';
+});
+
+// Nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').className=window.scrollY>30?'scrolled':'top';
+},{passive:true});
+
+// Mobile menu
+function toggleMobile(){
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMobile(){
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// Page switcher
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(initReveal,120);
+}
+
+// Hero canvas — floating musical notes
+(function(){
+  const canvas=document.getElementById('heroCanvas');
+  const ctx=canvas.getContext('2d');
+  let W,H;
+  function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  const notes=['♩','♪','♫','♬'];
+  const particles=Array.from({length:45},()=>({
+    x:Math.random()*1600,y:Math.random()*900,
+    vx:(Math.random()-0.5)*0.25,vy:-Math.random()*0.35-0.08,
+    size:Math.random()*20+7,
+    opacity:Math.random()*0.14+0.03,
+    char:notes[Math.floor(Math.random()*4)]
+  }));
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      ctx.save();ctx.globalAlpha=p.opacity;
+      ctx.fillStyle='#C9963A';ctx.font=p.size+'px serif';
+      ctx.fillText(p.char,p.x%W,((p.y%H)+H)%H);
+      ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.y<-30)p.y=H+30;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// Hero entrance
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('he1').classList.add('show'),200);
+  setTimeout(()=>document.getElementById('he2').classList.add('show'),420);
+  setTimeout(()=>document.getElementById('he3').classList.add('show'),700);
+  setTimeout(()=>document.getElementById('he4').classList.add('show'),920);
+  setTimeout(()=>document.getElementById('heroScroll').classList.add('show'),1400);
+});
+
+// Animated counter
+function animateCounter(el,target,dur){
+  const start=performance.now();
+  const isLarge=target>100;
+  (function update(now){
+    const t=Math.min((now-start)/dur,1);
+    const ease=1-Math.pow(1-t,3);
+    const val=Math.round(ease*target);
+    el.textContent=val+(target===50?'+':'');
+    if(t<1)requestAnimationFrame(update);
+  })(start);
+}
+
+// Scroll reveal + counter trigger
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        e.target.querySelectorAll('[data-count]').forEach(el=>{
+          if(!el.dataset.done){el.dataset.done=1;animateCounter(el,+el.dataset.count,1600);}
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.stagger').forEach(el=>obs.observe(el));
+}
+initReveal();
+
+// Parallax scrolling text
+window.addEventListener('scroll',()=>{
+  const pt=document.getElementById('parallaxText');
+  if(pt)pt.style.transform='translateX(-'+(window.scrollY*0.07%50)+'%)';
+},{passive:true});
+
+// Members login
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value.trim();
+  if(u==='zhiyin'&&p==='2526'){
+    document.getElementById('membersLogin').style.display='none';
+    document.getElementById('membersContent').style.display='block';
+    document.getElementById('loginError').style.display='none';
+  } else {
+    document.getElementById('loginError').style.display='block';
+    document.getElementById('loginPass').value='';
+    document.getElementById('loginPass').focus();
+  }
+}
+function doLogout(){
+  document.getElementById('membersLogin').style.display='flex';
+  document.getElementById('membersContent').style.display='none';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+}
+</script>
+</body>
+</html>
