@@ -50,7 +50,27 @@ nav.top{background:transparent}
 
 .hero{position:relative;min-height:100vh;background:var(--ink);display:flex;align-items:center;overflow:hidden}
 .hero-canvas{position:absolute;inset:0;z-index:0;width:100%;height:100%}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,22,40,0.92) 0%,rgba(10,22,40,0.55) 100%);z-index:1}
+.hero-slides{position:absolute;inset:0;z-index:0}
+.hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.2s ease-in-out}
+.hero-slide.active{opacity:1}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(59,10,10,0.82) 0%,rgba(59,10,10,0.45) 100%);z-index:1}
+.hero-dots{position:absolute;bottom:5rem;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.35);border:none;cursor:pointer;padding:0;transition:background 0.3s,transform 0.3s}
+.hero-dot.active{background:var(--gold);transform:scale(1.3)}
+.hero-arrows{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 2rem;z-index:3;pointer-events:none}
+.hero-arrow{background:rgba(0,0,0,0.3);border:1px solid rgba(201,150,58,0.4);color:var(--gold);width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;pointer-events:all;transition:background 0.25s,border-color 0.25s}
+.hero-arrow:hover{background:rgba(201,150,58,0.2);border-color:var(--gold)}
+.asl-slide{display:none}.asl-slide.active{display:block}
+.asl-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);border:1px solid rgba(201,150,58,0.5);color:var(--gold);width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;z-index:4;transition:background 0.2s}
+.asl-arrow:hover{background:rgba(201,150,58,0.25)}
+.asl-prev{left:12px}
+.asl-next{right:12px}
+.asl-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:4}
+.asl-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);border:none;cursor:pointer;padding:0;transition:background 0.3s,transform 0.3s}
+.asl-dot.active{background:var(--gold);transform:scale(1.3)}
+.asl-caption-bar{background:var(--ink);padding:0.9rem 1.5rem;text-align:center}
+.asl-cap{display:none;font-size:0.88rem;color:rgba(255,255,255,0.7);letter-spacing:0.05em}
+.asl-cap.active{display:inline}
 .hero-content{position:relative;z-index:2;padding:0 10vw;max-width:1100px;width:100%}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:0.7rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:0;transform:translateY(20px);transition:opacity 0.8s 0.2s,transform 0.8s 0.2s}
 .hero-eyebrow.show{opacity:1;transform:none}
@@ -308,14 +328,31 @@ footer a{color:rgba(255,255,255,0.25)}
 
   <!-- FEATURED PERFORMANCE PHOTO -->
   <section style="background:var(--ink2);padding:5rem 10vw 6rem">
-    <div class="reveal" style="border-radius:10px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,0.35);position:relative">
-      <img src="_ART7527.jpg" alt="知音合唱團於 2026 Alberta Choral Festival 首屆演出" style="width:100%;display:block">
-      <div style="position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.8rem;background:linear-gradient(to top,rgba(10,22,40,0.85),transparent)">
-        <div style="font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)">June 21, 2026 · Alberta Choral Festival</div>
-        <div style="font-family:'Noto Serif SC',serif;font-size:1.15rem;color:#fff;font-weight:600;margin-top:4px">知音合唱團主辦首屆 Alberta Choral Festival</div>
+    <div class="reveal about-slideshow" style="border-radius:10px;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,0.35)">
+      <div style="position:relative">
+        <div class="asl-slide active"><img src="001-2026年6月21日Alberta Choral Festival.jpg" alt="知音合唱團演出" style="width:100%;display:block"></div>
+        <div class="asl-slide"><img src="002-2025年7月12日Voice for Peace 音乐会.jpg" alt="知音合唱團演出" style="width:100%;display:block"></div>
+        <div class="asl-slide"><img src="003-2025年2月6日元宵晚会.jpg" alt="知音合唱團演出" style="width:100%;display:block"></div>
+        <div class="asl-slide"><img src="004-2025年1月19日春节晚会.jpg" alt="知音合唱團演出" style="width:100%;display:block"></div>
+        <div class="asl-slide"><img src="005-2024年12月14日Sound of Seaons.jpg" alt="知音合唱團演出" style="width:100%;display:block"></div>
+        <button class="asl-arrow asl-prev" onclick="aslStep(-1)">&#8592;</button>
+        <button class="asl-arrow asl-next" onclick="aslStep(1)">&#8594;</button>
+        <div class="asl-dots">
+          <button class="asl-dot active" onclick="aslGoTo(0)"></button>
+          <button class="asl-dot" onclick="aslGoTo(1)"></button>
+          <button class="asl-dot" onclick="aslGoTo(2)"></button>
+          <button class="asl-dot" onclick="aslGoTo(3)"></button>
+          <button class="asl-dot" onclick="aslGoTo(4)"></button>
+        </div>
+      </div>
+      <div class="asl-caption-bar">
+        <span class="asl-cap active">2026年6月21日Alberta Choral Festival</span>
+        <span class="asl-cap">2025年7月12日Voice for Peace 音乐会</span>
+        <span class="asl-cap">2025年2月6日元宵晚会</span>
+        <span class="asl-cap">2025年1月19日春节晚会</span>
+        <span class="asl-cap">2024年12月14日Sound of Seaons</span>
       </div>
     </div>
-    <p class="reveal" style="text-align:center;color:rgba(255,255,255,0.45);font-size:0.85rem;margin-top:1rem">2026年6月21日，知音合唱團主辦首屆 Alberta Choral Festival。</p>
   </section>
 
   <!-- PHOTO GALLERY STRIP -->
@@ -627,9 +664,42 @@ function showPage(id){
   setTimeout(initReveal,120);
 }
 
+// About photo slideshow
+(function(){
+  let cur=0;
+  const sel=s=>document.querySelectorAll(s);
+  function goTo(n){
+    const slides=sel('.asl-slide'),dots=sel('.asl-dot'),caps=sel('.asl-cap');
+    [slides[cur],dots[cur],caps[cur]].forEach(el=>el.classList.remove('active'));
+    cur=(n+slides.length)%slides.length;
+    [slides[cur],dots[cur],caps[cur]].forEach(el=>el.classList.add('active'));
+  }
+  window.aslGoTo=goTo;
+  window.aslStep=d=>goTo(cur+d);
+  setInterval(()=>goTo(cur+1),4000);
+})();
+
+// Hero slideshow
+(function(){
+  let cur=0;
+  const slides=document.querySelectorAll('.hero-slide');
+  const dots=document.querySelectorAll('.hero-dot');
+  function goTo(n){
+    slides[cur].classList.remove('active');
+    dots[cur].classList.remove('active');
+    cur=(n+slides.length)%slides.length;
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+  }
+  window.heroSlide=d=>goTo(cur+d);
+  window.heroGoTo=goTo;
+  setInterval(()=>goTo(cur+1),5000);
+})();
+
 // Hero canvas — floating musical notes
 (function(){
   const canvas=document.getElementById('heroCanvas');
+  if(!canvas)return;
   const ctx=canvas.getContext('2d');
   let W,H;
   function resize(){W=canvas.width=canvas.offsetWidth;H=canvas.height=canvas.offsetHeight;}
