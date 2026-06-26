@@ -45,7 +45,7 @@ nav.top{background:transparent}
 .mobile-menu a{display:block;color:rgba(255,255,255,0.8);text-decoration:none;font-size:1.1rem;padding:0.9rem 0;border-bottom:1px solid rgba(255,255,255,0.07);letter-spacing:0.06em;transition:color 0.2s,padding 0.2s;cursor:pointer}
 .mobile-menu a:hover{color:var(--gold-lt);padding-left:8px}
 
-.page{display:none;padding-top:var(--nav-h)}
+.page{display:none}
 .page.active{display:block}
 
 .hero{position:relative;min-height:100vh;background:var(--ink);display:flex;align-items:center;overflow:hidden}
@@ -128,7 +128,7 @@ nav.top{background:transparent}
 .soc-xhs{background:#FF2442;color:#fff;box-shadow:0 4px 16px rgba(255,36,66,0.25)}
 .soc-xhs:hover{box-shadow:0 8px 24px rgba(255,36,66,0.4)}
 
-.page-header{background:var(--ink);padding:5rem 10vw 4rem;position:relative;overflow:hidden}
+.page-header{background:var(--ink);padding:calc(5rem + var(--nav-h)) 10vw 4rem;position:relative;overflow:hidden}
 .page-header::before{content:'';position:absolute;bottom:-1px;left:0;right:0;height:60px;background:var(--cream);clip-path:ellipse(55% 100% at 50% 100%)}
 .page-header h1{font-family:'Noto Serif SC',serif;font-size:clamp(2rem,5vw,3.5rem);color:#fff;font-weight:700}
 .page-header h1 span{color:var(--gold)}
